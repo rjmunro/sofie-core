@@ -4,7 +4,6 @@ import _ from 'underscore'
 import { Time } from './tempLib.js'
 import { getCurrentTime, systemTime } from './systemTime.js'
 import { logger } from './logging.js'
-import shajs from 'sha.js'
 import { SINGLE_USE_TOKEN_SALT } from '@sofie-automation/meteor-lib/dist/api/userActions'
 import RundownViewEventBus, {
 	RundownViewEventBusEvents,
@@ -251,12 +250,12 @@ export function catchError(context: string): (...errs: any[]) => void {
 	return (...errs: any[]) => logger.error(context, ...errs)
 }
 
-export function hashSingleUseToken(token: string): string {
-	// Future: it would be nice for this to use a better webcrypto/better library, but this works
-	return shajs('sha1')
-		.update(SINGLE_USE_TOKEN_SALT + token)
-		.digest('base64')
-		.replace(/[+/=]/g, '_')
+export async function hashSingleUseToken(token: string): Promise<string> {
+	const text = SINGLE_USE_TOKEN_SALT + token
+	const data = Buffer.from(text)
+	const digest = await crypto.subtle.digest('SHA-1', data)
+	const base64Digest = btoa(String.fromCharCode(...new Uint8Array(digest)))
+	return base64Digest.replace(/[+/=]/g, '_')
 }
 
 export function useRundownViewEventBusListener<TEvent extends RundownViewEvents>(

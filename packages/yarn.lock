@@ -6418,7 +6418,6 @@ __metadata:
     "@types/react-router": "npm:^5.1.20"
     "@types/react-router-bootstrap": "npm:^0"
     "@types/react-router-dom": "npm:^5.3.3"
-    "@types/sha.js": "npm:^2.4.4"
     "@types/sinon": "npm:^10.0.20"
     "@types/xml2js": "npm:^0.4.14"
     "@vitejs/plugin-react": "npm:^4.3.4"
@@ -6458,7 +6457,6 @@ __metadata:
     react-router-dom: "npm:^5.3.4"
     sass: "npm:^1.83.4"
     semver: "npm:^7.6.3"
-    sha.js: "npm:^2.4.11"
     shuttle-webhid: "npm:^0.0.2"
     sinon: "npm:^14.0.2"
     type-fest: "npm:^4.33.0"
@@ -8150,15 +8148,6 @@ __metadata:
     "@types/mime": "npm:*"
     "@types/node": "npm:*"
   checksum: 10/d5f8f5aaa765be6417aa3f2ebe36591f4e9d2d8a7480edf7d3db041427420fd565cb921fc021271098dd2afafce2b443fc0d978faa3ae21a2a58ebde7d525e9e
-  languageName: node
-  linkType: hard
-
-"@types/sha.js@npm:^2.4.4":
-  version: 2.4.4
-  resolution: "@types/sha.js@npm:2.4.4"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10/e5917afe3116971c882b475298c7ca99aae69715057948526f805ca75dd67675eeaad7014f525c80e1243022923c496f52546164b90231285364f72aba874989
   languageName: node
   linkType: hard
 
@@ -26576,7 +26565,7 @@ asn1@evs-broadcast/node-asn1:
   languageName: node
   linkType: hard
 
-"sha.js@npm:^2.4.0, sha.js@npm:^2.4.11, sha.js@npm:^2.4.8":
+"sha.js@npm:^2.4.0, sha.js@npm:^2.4.8":
   version: 2.4.11
   resolution: "sha.js@npm:2.4.11"
   dependencies:

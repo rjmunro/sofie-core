@@ -36,4 +36,7 @@ module.exports = {
 	coverageProvider: 'v8',
 	collectCoverage: true,
 	preset: 'ts-jest',
+	// Needed because we use Prettier V3, but Jest before v30 only supports Prettier V2
+	// See https://jestjs.io/docs/configuration/#prettierpath-string
+	prettierPath: null,
 }

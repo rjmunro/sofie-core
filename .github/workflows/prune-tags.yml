@@ -16,8 +16,8 @@ on:
 
 jobs:
   prune-tags:
-    if: ${{ github.repository_owner == 'nrkno' }}
-    
+    if: ${{ github.repository_owner == 'Sofie-Automation' }}
+
     name: Prune tags
     runs-on: ubuntu-latest
     timeout-minutes: 15

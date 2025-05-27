@@ -12,6 +12,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * meteor 3.0.4 ([8670727](https://github.com/nrkno/sofie-core/commit/8670727bba5ac9cffe0e5d36b4bd45d6664482be))
 * support for http header in packagemanager ([1e5bbc6](https://github.com/nrkno/sofie-core/commit/1e5bbc669fe67fedf48027524232ad6696fc8909))
 * update meteor to 3.1 and node to 22 ([61b6854](https://github.com/nrkno/sofie-core/commit/61b6854261a03f04e81416b9d37ee995e3a10108))
+## [1.51.7](https://github.com/nrkno/sofie-core/compare/v1.51.6...v1.51.7) (2025-05-06)
+
+**Note:** Version bump only for package @sofie-automation/server-core-integration
 
 
 

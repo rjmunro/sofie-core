@@ -193,7 +193,7 @@ export async function getSystemStatus(cred0: Credentials, studioId?: StudioId): 
 		updated: new Date(getCurrentTime()).toISOString(),
 		status: 'UNDEFINED',
 		_status: StatusCode.UNKNOWN,
-		documentation: 'https://github.com/nrkno/sofie-core',
+		documentation: 'https://github.com/Sofie-Automation/sofie-core',
 		_internal: {
 			// this _internal is set later
 			statusCodeString: StatusCode[StatusCode.UNKNOWN],

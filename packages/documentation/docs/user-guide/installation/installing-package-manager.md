@@ -27,7 +27,7 @@ At this time, the Package Manager worker process is Windows-only. Therefore, the
 Package Manager is a suite of standalone applications, separate from _Sofie&nbsp;Core_. This guide assumes that Package Manager will be running on the same computer as _CasparCG&nbsp;Server_ and _Sofie&nbsp;Core_, as that is the fastest way to set up a demo. To get all parts of _Package Manager_ up and running quickly, execute these commands:
 
 ```bash
-git clone https://github.com/nrkno/sofie-package-manager.git
+git clone https://github.com/Sofie-Automation/sofie-package-manager.git
 cd sofie-package-manager
 yarn install
 yarn build
@@ -49,10 +49,9 @@ To setup, go into Core and add this device to a Studio
 
 This first run is necessary to get the Package Manager device registered with _Sofie&nbsp;Core_. We'll restart Package Manager later on in the [Configuration](#configuration) instructions.
 
-
 ## Installation In Production
 
-We provide pre-built executables for Windows (x64) systems that can be used in production environments. These can be found on the [Releases](https://github.com/nrkno/sofie-package-manager/releases) GitHub repository page for Package Manager. For a minimal installation, you'll need the `package-manager-single-app.exe` and `worker.exe`. Put them in a folder of your choice. You can also place `ffmpeg.exe` and `ffprobe.exe` alongside them, if you don't want to make them available in `PATH`.
+We provide pre-built executables for Windows (x64) systems that can be used in production environments. These can be found on the [Releases](https://github.com/Sofie-Automation/sofie-package-manager/releases) GitHub repository page for Package Manager. For a minimal installation, you'll need the `package-manager-single-app.exe` and `worker.exe`. Put them in a folder of your choice. You can also place `ffmpeg.exe` and `ffprobe.exe` alongside them, if you don't want to make them available in `PATH`.
 
 ```bash
 package-manager-single-app.exe --coreHost=<Core Host Name> --corePort=<Core HTTP(S) port> --deviceId=<Peripheral Device Id> --deviceToken=<Peripheral Device Token/Password>
@@ -90,4 +89,4 @@ If all is good, head to the [Rundowns page](http://localhost:3000/rundowns) and 
 
 ### Further Reading
 
-- [Package Manager](https://github.com/nrkno/sofie-package-manager) on GitHub.
+- [Package Manager](https://github.com/Sofie-Automation/sofie-package-manager) on GitHub.

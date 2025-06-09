@@ -19,7 +19,7 @@
 		"lint-fix": "run lint --fix",
 		"genclient:ts": "run -T rimraf client/ts && openapi-generator-cli generate -i ./api/actions.yaml -o client/ts -g typescript-fetch -p supportsES6=true",
 		"genclient:rs": "run -T rimraf client/rs && openapi-generator-cli generate -i ./api/actions.yaml -o client/rs -g rust",
-		"gendocs": "run -T rimraf docs && node install_swagger.js && java -jar ./jars/swagger-codegen-cli.jar generate -i ./api/actions.yaml -l html2 -o ./docs",
+		"gendocs": "run -T rimraf docs && node install_swagger.mjs && java -jar ./jars/swagger-codegen-cli.jar generate -i ./api/actions.yaml -l html2 -o ./docs",
 		"genserver": "run -T rimraf server && node install_swagger.mjs && java -jar ./jars/swagger-codegen-cli.jar generate -i ./api/actions.yaml -l nodejs-server -o server && cd server && npm install && cd ../",
 		"runserver": "run genserver && cd server && node index.js",
 		"test": "run lint && run genclient:ts && run unit",
@@ -32,7 +32,7 @@
 	"files": [
 		"/api",
 		"/dist",
-		"install_swagger.js"
+		"install_swagger.mjs"
 	],
 	"dependencies": {
 		"tslib": "^2.8.1"

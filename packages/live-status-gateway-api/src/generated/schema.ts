@@ -103,6 +103,10 @@ interface PlaylistStatus {
 	 */
 	id: string
 	/**
+	 * Id normally sourced from the ingest system
+	 */
+	externalId: string
+	/**
 	 * The user defined playlist name
 	 */
 	name: string
@@ -127,6 +131,10 @@ interface ActivePlaylistEvent {
 	 * Unique id of the active playlist
 	 */
 	id: string | null
+	/**
+	 * Id normally sourced from the ingest system
+	 */
+	externalId: string | null
 	/**
 	 * User-presentable name for the active playlist
 	 */
@@ -667,16 +675,15 @@ interface BucketStatus {
 	/**
 	 * Unique id of the bucket
 	 */
-	id?: string
+	id: string
 	/**
 	 * The user defined bucket name
 	 */
-	name?: string
+	name: string
 	/**
 	 * The AdLibs in this bucket
 	 */
-	adLibs?: BucketAdLibStatus[]
-	additionalProperties?: Record<string, any>
+	adLibs: BucketAdLibStatus[]
 }
 
 interface BucketAdLibStatus {

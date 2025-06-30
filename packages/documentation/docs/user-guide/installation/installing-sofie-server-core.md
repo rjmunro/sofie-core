@@ -39,7 +39,7 @@ services:
 
   core:
     hostname: core
-    image: sofietv/tv-automation-server-core:release51
+    image: sofietv/tv-automation-server-core:release52
     restart: always
     ports:
       - '3000:3000' # Same port as meteor uses by default
@@ -57,7 +57,7 @@ services:
       - db
 
   playout-gateway:
-    image: sofietv/tv-automation-playout-gateway:release51
+    image: sofietv/tv-automation-playout-gateway:release52
     restart: always
     environment:
       DEVICE_ID: playoutGateway0
@@ -86,7 +86,7 @@ services:
   #     - core
 
   # mos-gateway:
-  #   image: sofietv/tv-automation-mos-gateway:release51
+  #   image: sofietv/tv-automation-mos-gateway:release52
   #   restart: always
   #   ports:
   #     - "10540:10540" # MOS Lower port

@@ -4,7 +4,7 @@ import { ParsedQuery, parse as queryStringParse } from 'query-string'
 import { Translated, translateWithTracker, useTracker } from '../lib/ReactMeteorData/react-meteor-data.js'
 import { VTContent, NoteSeverity, ISourceLayer } from '@sofie-automation/blueprints-integration'
 import { Spinner } from '../lib/Spinner.js'
-import ClassNames from 'classnames'
+import classNames from 'classnames'
 import * as _ from 'underscore'
 import { Prompt } from 'react-router-dom'
 import { DBRundownPlaylist, QuickLoopMarker } from '@sofie-automation/corelib/dist/dataModel/RundownPlaylist'
@@ -285,8 +285,14 @@ export function RundownView(props: Readonly<IProps>): JSX.Element {
 		partInstances?.currentPartInstance
 	)
 
+	const hideRundownHeader = params['hideRundownHeader'] === '1'
+
 	return (
-		<div className="container-fluid header-clear">
+		<div
+			className={classNames('container-fluid', 'header-clear', {
+				'header-clear--no-rundown-header': hideRundownHeader,
+			})}
+		>
 			<RundownViewContent
 				{...props}
 				subsReady={subsReady}
@@ -305,6 +311,7 @@ export function RundownView(props: Readonly<IProps>): JSX.Element {
 				{...selectedRundownLayouts}
 				uiSegmentMap={miniShelfData.uiSegmentMap}
 				miniShelfFilter={miniShelfData.miniShelfFilter}
+				hideRundownHeader={hideRundownHeader}
 			/>
 		</div>
 	)
@@ -313,6 +320,7 @@ export function RundownView(props: Readonly<IProps>): JSX.Element {
 interface IPropsWithReady extends IProps {
 	subsReady: boolean
 	userPermissions: Readonly<UserPermissions>
+	hideRundownHeader?: boolean
 }
 
 interface IRundownViewContentSnapshot {
@@ -979,7 +987,7 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 								return (
 									<ErrorBoundary key={unprotectString(segment._id)}>
 										<VirtualElement
-											className={ClassNames({
+											className={classNames({
 												'segment-timeline-wrapper--hidden': segment.isHidden,
 												'segment-timeline-wrapper--shelf': segment.showShelf,
 											})}
@@ -1083,7 +1091,7 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 				case SegmentViewMode.Storyboard:
 					return <SegmentStoryboardContainer {...resolvedSegmentProps} />
 				case SegmentViewMode.List:
-					return <SegmentListContainer {...resolvedSegmentProps} />
+					return <SegmentListContainer {...resolvedSegmentProps} hideRundownHeader={this.props.hideRundownHeader} />
 				case SegmentViewMode.Timeline:
 				default:
 					return <SegmentTimelineContainer {...resolvedSegmentProps} />
@@ -1320,7 +1328,7 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 						{(selectionContext) => {
 							return (
 								<div
-									className={ClassNames('rundown-view', {
+									className={classNames('rundown-view', {
 										'notification-center-open': this.state.isNotificationsCenterOpen !== undefined,
 										'rundown-view--studio-mode': this.props.userPermissions.studio,
 										'properties-panel-open': selectionContext.listSelectedElements().length > 0,
@@ -1336,20 +1344,22 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 											this.props.userPermissions.studio &&
 											studio.settings.enableEvaluationForm && <AfterBroadcastForm playlist={playlist} />}
 									</ErrorBoundary>
-									<ErrorBoundary>
-										<RundownHeader
-											playlist={playlist}
-											studio={studio}
-											rundownIds={this.props.rundowns.map((r) => r._id)}
-											firstRundown={this.props.rundowns[0]}
-											onActivate={this.onActivate}
-											inActiveRundownView={this.props.inActiveRundownView}
-											currentRundown={currentRundown}
-											layout={this.props.selectedHeaderLayout}
-											showStyleBase={showStyleBase}
-											showStyleVariant={showStyleVariant}
-										/>
-									</ErrorBoundary>
+									{!this.props.hideRundownHeader && (
+										<ErrorBoundary>
+											<RundownHeader
+												playlist={playlist}
+												studio={studio}
+												rundownIds={this.props.rundowns.map((r) => r._id)}
+												firstRundown={this.props.rundowns[0]}
+												onActivate={this.onActivate}
+												inActiveRundownView={this.props.inActiveRundownView}
+												currentRundown={currentRundown}
+												layout={this.props.selectedHeaderLayout}
+												showStyleBase={showStyleBase}
+												showStyleVariant={showStyleVariant}
+											/>
+										</ErrorBoundary>
+									)}
 									<ErrorBoundary>
 										<Shelf
 											isExpanded={
@@ -1369,7 +1379,7 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 										{this.props.userPermissions.studio && !Settings.disableBlurBorder && (
 											<KeyboardFocusIndicator userPermissions={this.props.userPermissions}>
 												<div
-													className={ClassNames('rundown-view__focus-lost-frame', {
+													className={classNames('rundown-view__focus-lost-frame', {
 														'rundown-view__focus-lost-frame--reduce-animation': import.meta.env.DEV,
 													})}
 												></div>
@@ -1393,6 +1403,7 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 											studioRouteSetExclusivityGroups={studio.routeSetExclusivityGroups}
 											onStudioRouteSetSwitch={this.onStudioRouteSetSwitch}
 											onSegmentViewMode={this.onSegmentViewModeChange}
+											hideRundownHeader={this.props.hideRundownHeader}
 										/>
 									</ErrorBoundary>
 									<ErrorBoundary>
@@ -1408,7 +1419,10 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 									<ErrorBoundary>
 										<AnimatePresence>
 											{this.state.isNotificationsCenterOpen && (
-												<NotificationCenterPanel filter={this.state.isNotificationsCenterOpen} />
+												<NotificationCenterPanel
+													filter={this.state.isNotificationsCenterOpen}
+													hideRundownHeader={this.props.hideRundownHeader}
+												/>
 											)}
 											{!this.state.isNotificationsCenterOpen && selectionContext.listSelectedElements().length > 0 && (
 												<div>

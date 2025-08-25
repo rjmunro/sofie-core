@@ -455,7 +455,7 @@ export function AccessorTableRow({
 										overrideHelper={overrideHelper}
 									>
 										{(value, handleUpdate) => (
-											<TextInputControl
+											<IntInputControl
 												modifiedClassName="bghl"
 												classNames="input text-input input-l"
 												value={value}

@@ -18,7 +18,6 @@ This docker-compose file automates the basic setup of the [Sofie-Core applicatio
 ```yaml
 # This is NOT recommended to be used for a production deployment.
 # It aims to quickly get an evaluation version of Sofie running and serve as a basis for how to set up a production deployment.
-version: '3.3'
 services:
   db:
     hostname: mongo
@@ -37,6 +36,16 @@ services:
     networks:
       - sofie
 
+  # Fix Ownership Snapshots mount
+  # Because docker volumes are owned by root by default
+  # And our images follow best-practise and don't run as root
+  change-vol-ownerships:
+    image: node:22-alpine
+    user: 'root'
+    volumes:
+      - sofie-store:/mnt/sofie-store
+    entrypoint: ['sh', '-c', 'chown -R node:node /mnt/sofie-store']
+
   core:
     hostname: core
     image: sofietv/tv-automation-server-core:release52
@@ -54,7 +63,10 @@ services:
     volumes:
       - sofie-store:/mnt/sofie-store
     depends_on:
-      - db
+      change-vol-ownerships:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
 
   playout-gateway:
     image: sofietv/tv-automation-playout-gateway:release52

@@ -662,6 +662,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./packages/documentation/build
+          force_orphan: true
 
   release-libs:
     name: Release Lib
@@ -773,7 +774,7 @@ jobs:
       - name: Prepare Environment
         run: |
           corepack enable
-          
+
           yarn config set cacheFolder /home/runner/check-for-multiple-library-versions-cache
           yarn
         env:

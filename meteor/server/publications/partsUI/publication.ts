@@ -189,7 +189,7 @@ meteorCustomPublish(
 	MeteorPubSub.uiParts,
 	CustomCollectionName.UIParts,
 	async function (pub, playlistId: RundownPlaylistId | null) {
-		check(playlistId, String)
+		check(playlistId, Match.Optional(String))
 
 		triggerWriteAccessBecauseNoCheckNecessary()
 

@@ -40,4 +40,5 @@ module.exports = {
 	coverageProvider: 'v8',
 	collectCoverage: true,
 	preset: 'ts-jest',
+	prettierPath: null,
 }

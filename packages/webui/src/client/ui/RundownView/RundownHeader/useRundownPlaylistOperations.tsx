@@ -498,7 +498,7 @@ class RundownPlaylistOperationsService {
 					return MeteorCall.userAction.storeRundownSnapshot(
 						e,
 						ts,
-						hashSingleUseToken(tokenResponse.result),
+						await hashSingleUseToken(tokenResponse.result),
 						this.playlist._id,
 						'Taken by user',
 						false

@@ -64,7 +64,7 @@ export interface TriggersContext {
 	readonly Rundowns: TriggersAsyncCollection<DBRundown>
 	readonly Segments: TriggersAsyncCollection<DBSegment>
 
-	hashSingleUseToken(token: string): string
+	hashSingleUseToken(token: string): Promise<string>
 
 	doUserAction<Result>(
 		_t: TFunction,

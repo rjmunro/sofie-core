@@ -119,13 +119,13 @@ export const DashboardActionButtonGroup = withTranslation()(
 				e,
 				UserAction.CREATE_SNAPSHOT_FOR_DEBUG,
 				(e, ts) =>
-					MeteorCall.system.generateSingleUseToken().then((tokenResult) => {
+					MeteorCall.system.generateSingleUseToken().then(async (tokenResult) => {
 						if (ClientAPI.isClientResponseError(tokenResult)) throw UserError.fromSerialized(tokenResult.error)
 						if (!tokenResult.result) throw new Error('Failed to generate token')
 						return MeteorCall.userAction.storeRundownSnapshot(
 							e,
 							ts,
-							hashSingleUseToken(tokenResult.result),
+							await hashSingleUseToken(tokenResult.result),
 							playlistId,
 							reason,
 							false

@@ -116,11 +116,11 @@ const SnapshotsViewContent = withTranslation()(
 		takeSystemSnapshot = (studioId: StudioId | null) => {
 			MeteorCall.system
 				.generateSingleUseToken()
-				.then((tokenResponse) => {
+				.then(async (tokenResponse) => {
 					if (ClientAPI.isClientResponseError(tokenResponse)) throw UserError.fromSerialized(tokenResponse.error)
 					if (!tokenResponse.result) throw new Error('Failed to generate token')
 					return MeteorCall.snapshot.storeSystemSnapshot(
-						hashSingleUseToken(tokenResponse.result),
+						await hashSingleUseToken(tokenResponse.result),
 						studioId,
 						`Requested by user`
 					)
@@ -140,11 +140,11 @@ const SnapshotsViewContent = withTranslation()(
 		takeDebugSnapshot = (studioId: StudioId) => {
 			MeteorCall.system
 				.generateSingleUseToken()
-				.then((tokenResponse) => {
+				.then(async (tokenResponse) => {
 					if (ClientAPI.isClientResponseError(tokenResponse)) throw UserError.fromSerialized(tokenResponse.error)
 					if (!tokenResponse.result) throw new Error('Failed to generate token')
 					return MeteorCall.snapshot.storeDebugSnapshot(
-						hashSingleUseToken(tokenResponse.result),
+						await hashSingleUseToken(tokenResponse.result),
 						studioId,
 						`Requested by user`
 					)

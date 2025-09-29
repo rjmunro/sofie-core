@@ -560,7 +560,7 @@ export function createAction(
 							return triggersContext.MeteorCall.userAction.storeRundownSnapshot(
 								e,
 								ts,
-								triggersContext.hashSingleUseToken(tokenResult.result),
+								await triggersContext.hashSingleUseToken(tokenResult.result),
 								ctx.rundownPlaylistId.get(null),
 								`action`,
 								false

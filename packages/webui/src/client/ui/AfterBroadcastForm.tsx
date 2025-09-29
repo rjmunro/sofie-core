@@ -81,13 +81,13 @@ export function AfterBroadcastForm({ playlist }: Readonly<{ playlist: DBRundownP
 				e,
 				UserAction.CREATE_SNAPSHOT_FOR_DEBUG,
 				async (e, ts) =>
-					MeteorCall.system.generateSingleUseToken().then((tokenResult) => {
+					MeteorCall.system.generateSingleUseToken().then(async (tokenResult) => {
 						if (ClientAPI.isClientResponseError(tokenResult)) throw UserError.fromSerialized(tokenResult.error)
 						if (!tokenResult.result) throw new Error('Failed to generate token')
 						return MeteorCall.userAction.storeRundownSnapshot(
 							e,
 							ts,
-							hashSingleUseToken(tokenResult.result),
+							await hashSingleUseToken(tokenResult.result),
 							playlist._id,
 							'Evaluation form',
 							false

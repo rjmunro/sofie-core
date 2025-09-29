@@ -1260,7 +1260,7 @@ const RundownViewContent = translateWithTracker<IPropsWithReady & ITrackedProps,
 						return MeteorCall.userAction.storeRundownSnapshot(
 							e,
 							ts,
-							hashSingleUseToken(tokenResponse.result),
+							await hashSingleUseToken(tokenResponse.result),
 							playlistId,
 							'User requested log at' + getCurrentTime(),
 							false

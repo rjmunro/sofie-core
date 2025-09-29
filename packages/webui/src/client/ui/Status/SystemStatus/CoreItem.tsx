@@ -93,11 +93,15 @@ export function CoreItem({ systemStatus, coreSystem }: ICoreItemProps): JSX.Elem
 											e,
 											UserAction.RESTART_CORE,
 											(e, ts) =>
-												MeteorCall.system.generateSingleUseToken().then((tokenResponse) => {
+												MeteorCall.system.generateSingleUseToken().then(async (tokenResponse) => {
 													if (ClientAPI.isClientResponseError(tokenResponse))
 														throw UserError.fromSerialized(tokenResponse.error)
 													if (!tokenResponse.result) throw new Error('Failed to generate token')
-													return MeteorCall.userAction.restartCore(e, ts, hashSingleUseToken(tokenResponse.result))
+													return MeteorCall.userAction.restartCore(
+														e,
+														ts,
+														await hashSingleUseToken(tokenResponse.result)
+													)
 												}),
 											(err, restartMessage) => {
 												if (err || !restartMessage) {

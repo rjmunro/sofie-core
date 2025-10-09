@@ -125,10 +125,10 @@ services:
   # rundown-editor:
   #   image: ghcr.io/superflytv/sofie-automation-rundown-editor:v2.2.4
   #   restart: always
-	#   ports:
+  #   ports:
   #   	- '3010:3010'
-	#   environment:
-	#     PORT: '3010'
+  #   environment:
+  #     PORT: '3010'
   #   networks:
   #     - sofie
   #   depends_on:

@@ -82,8 +82,6 @@ services:
       - core
 
   # Choose one of the following images, depending on which type of ingest gateway is wanted.
-  # If using the Rundown Editor, then none of the below images are needed.
-  # The Rundown Editor can be found here: https://github.com/SuperFlyTV/sofie-automation-rundown-editor
 
   # spreadsheet-gateway:
   #   image: superflytv/sofie-spreadsheet-gateway:latest
@@ -146,9 +144,9 @@ volumes:
 
 Create a `Sofie` folder, copy the above content, and save it as `docker-compose.yaml` within the `Sofie` folder.
 
-Visit [Rundowns & Newsroom Systems](installing-a-gateway/rundown-or-newsroom-system-connection/intro.md) to see which _Rundown Gateway_ can be used in your specific production environment. If you don't have an NRCS that you would like to integrate with, you can use Navigate to the _ingest-gateway_ section of `docker-compose.yaml` and select which type of _ingest-gateway_ you'd like installed by uncommenting it. Save your changes.
+Visit [Rundowns & Newsroom Systems](installing-a-gateway/rundown-or-newsroom-system-connection/intro.md) to see which _Ingest Gateway_ can be used in your specific production environment. If you don't have an NRCS that you would like to integrate with, you can use the [Rundown Editor](rundown-editor) as a simple Rundown creation utility. Navigate to the _ingest-gateway_ section of `docker-compose.yaml` and select which type of _ingest-gateway_ you'd like installed by uncommenting it. Save your changes.
 
-Then open a terminal, execute `cd Sofie` and `sudo docker-compose up` \(or just `docker-compose up` on Windows\). This will download MongoDB and Sofie components' container images and start them up. The installation will be done when your terminal window will be filled with messages coming from `playout-gateway_1` and `core_1`.
+Open a terminal, execute `cd Sofie` and `sudo docker-compose up` \(or just `docker-compose up` on Windows\). This will download MongoDB and Sofie components' container images and start them up. The installation will be done when your terminal window will be filled with messages coming from `playout-gateway_1` and `core_1`.
 
 Once the installation is done, Sofie should be running on [http://localhost:3000](http://localhost:3000). Next, you need to make sure that the Playout Gateway and Ingest Gateway are connected to the default Studio that has been automatically created. Open the Sofie User Interface with [Configuration Access level](../features/access-levels#browser-based) by opening [http://localhost:3000/?admin=1](http://localhost:3000/?admin=1) in your Web Browser and navigate to _Settings_&nbsp;🡒 _Studios_&nbsp;🡒 _Default Studio_&nbsp;🡒 _Peripheral Devices_. In the _Parent Devices_ section, create a new Device using the **+** button, rename the device to _Playout Gateway_ and select _Playout gateway_ from the _Peripheral Device_ drop down menu. Repeat this process for your _Ingest Gateway_ or _Sofie Rundown Editor_.
 

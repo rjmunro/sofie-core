@@ -18,7 +18,6 @@ This docker-compose file automates the basic setup of the [Sofie-Core applicatio
 ```yaml
 # This is NOT recommended to be used for a production deployment.
 # It aims to quickly get an evaluation version of Sofie running and serve as a basis for how to set up a production deployment.
-version: '3.3'
 services:
   db:
     hostname: mongo
@@ -37,9 +36,19 @@ services:
     networks:
       - sofie
 
+  # Fix Ownership Snapshots mount
+  # Because docker volumes are owned by root by default
+  # And our images follow best-practise and don't run as root
+  change-vol-ownerships:
+    image: node:22-alpine
+    user: 'root'
+    volumes:
+      - sofie-store:/mnt/sofie-store
+    entrypoint: ['sh', '-c', 'chown -R node:node /mnt/sofie-store']
+
   core:
     hostname: core
-    image: sofietv/tv-automation-server-core:release51
+    image: sofietv/tv-automation-server-core:release52
     restart: always
     ports:
       - '3000:3000' # Same port as meteor uses by default
@@ -54,10 +63,13 @@ services:
     volumes:
       - sofie-store:/mnt/sofie-store
     depends_on:
-      - db
+      change-vol-ownerships:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
 
   playout-gateway:
-    image: sofietv/tv-automation-playout-gateway:release51
+    image: sofietv/tv-automation-playout-gateway:release52
     restart: always
     environment:
       DEVICE_ID: playoutGateway0
@@ -76,20 +88,26 @@ services:
   # spreadsheet-gateway:
   #   image: superflytv/sofie-spreadsheet-gateway:latest
   #   restart: always
-  #   command: yarn start -host core -port 3000 -id spreadsheetGateway0
+  #   environment:
+  #     DEVICE_ID: spreadsheetGateway0
+  #     CORE_HOST: core
+  #     CORE_PORT: '3000'
   #   networks:
   #     - sofie
   #   depends_on:
   #     - core
 
   # mos-gateway:
-  #   image: sofietv/tv-automation-mos-gateway:release51
+  #   image: sofietv/tv-automation-mos-gateway:release52
   #   restart: always
   #   ports:
   #     - "10540:10540" # MOS Lower port
   #     - "10541:10541" # MOS Upper port
   #     # - "10542:10542" # MOS query port - not used
-  #   command: yarn start -host core -port 3000 -id mosGateway0
+  #   environment:
+  #     DEVICE_ID: mosGateway0
+  #     CORE_HOST: core
+  #     CORE_PORT: '3000'
   #   networks:
   #     - sofie
   #   depends_on:

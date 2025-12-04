@@ -46,14 +46,15 @@ jobs:
                 );
                 
                 if (!alreadyApproved) {
-                  // Submit an approval review
-                  await github.rest.pulls.createReview({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    pull_request_number: pr.number,
-                    body: '✅ Auto-approving: This PR has been open for 7+ days with no objections.',
-                    event: 'APPROVE'
-                  });
+                  // Uncomment the below to make it actually work
+                  // // Submit an approval review
+                  // await github.rest.pulls.createReview({
+                  //   owner: context.repo.owner,
+                  //   repo: context.repo.repo,
+                  //   pull_request_number: pr.number,
+                  //   body: '✅ Auto-approving: This PR has been open for 7+ days with no objections.',
+                  //   event: 'APPROVE'
+                  // });
                   
                   console.log(`Approved PR #${pr.number}: ${pr.title}`);
                 }

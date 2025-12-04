@@ -1,0 +1,61 @@
+name: Auto-approve uncontested PRs after 7 days
+
+on:
+  schedule:
+    - cron: '26 5 * * *' # Run every day at 5:26 AM UTC (time chosen randomly to avoid creating peaks)
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  pull-requests: write
+
+jobs:
+  approve-uncontested-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-approve uncontested PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Calculate the date 7 days ago
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            
+            // Fetch all open pull requests, sorted by creation date (oldest first)
+            const { data: pullRequests } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              sort: 'created',
+              direction: 'asc'
+            });
+            
+            for (const pr of pullRequests) {
+              const createdAt = new Date(pr.created_at);
+              
+              // Only process PRs older than 7 days
+              if (createdAt < sevenDaysAgo) {
+                // Check if already approved by this action to avoid spamming
+                const { data: reviews } = await github.rest.pulls.listReviews({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_request_number: pr.number
+                });
+                
+                const alreadyApproved = reviews.some(
+                  review => review.user.login === 'github-actions[bot]' && review.state === 'APPROVED'
+                );
+                
+                if (!alreadyApproved) {
+                  // Submit an approval review
+                  await github.rest.pulls.createReview({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_request_number: pr.number,
+                    body: '✅ Auto-approving: This PR has been open for 7+ days with no objections.',
+                    event: 'APPROVE'
+                  });
+                  
+                  console.log(`Approved PR #${pr.number}: ${pr.title}`);
+                }
+              }
+            }

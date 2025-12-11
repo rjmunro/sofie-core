@@ -706,3 +706,150 @@ jobs:
           yarn validate:versions
         env:
           CI: true
+
+  publish-preview-packages:
+    name: Publish preview packages
+    runs-on: ubuntu-latest
+    needs: [lint-packages, test-packages]
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".node-version"
+      - uses: ./.github/actions/setup-meteor
+      - name: restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            meteor/node_modules
+            packages/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock', 'meteor/yarn.lock', 'meteor/.meteor/release', 'packages/yarn.lock') }}
+      - name: Prepare Environment
+        run: |
+          corepack enable
+          yarn config set cacheFolder /home/runner/publish-preview-cache
+          yarn
+          yarn build:packages
+        env:
+          CI: true
+      - name: Publish preview packages
+        id: publish
+        uses: rjmunro/publish-preview-packages@v1
+        with:
+          registry-token: ${{ secrets.GITHUB_TOKEN }}
+          packages: |
+            packages/blueprints-integration
+            packages/corelib
+            packages/job-worker
+            packages/live-status-gateway
+            packages/live-status-gateway-api
+            packages/meteor-lib
+            packages/mos-gateway
+            packages/playout-gateway
+            packages/server-core-integration
+            packages/shared-lib
+          skip-build: 'true'
+          max-versions: '150'
+          min-age-days: '30'
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const packages = JSON.parse('${{ steps.publish.outputs.published-packages }}');
+            
+            // Find PR for this branch if push event
+            let prNumber = context.payload.pull_request?.number;
+            if (!prNumber && context.eventName === 'push') {
+              const { data: prs } = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                head: `${context.repo.owner}:${context.ref.replace('refs/heads/', '')}`
+              });
+              prNumber = prs[0]?.number;
+            }
+            
+            if (!prNumber) {
+              console.log('No PR found, skipping comment');
+              return;
+            }
+            
+            // Split packages into updated (new) and unchanged (existing)
+            const updatedPackages = packages.filter(pkg => pkg.isNew);
+            const unchangedPackages = packages.filter(pkg => !pkg.isNew);
+            
+            const formatPackage = (pkg) => `- **${pkg.name}**@\`${pkg.version}\`
+              \`\`\`bash
+              # Install this preview version
+              yarn add ${pkg.name}@${pkg.tag}
+              \`\`\`
+              
+              To use via resolutions:
+              \`\`\`json
+              "resolutions": {
+                "${pkg.originalName}": "${pkg.name}@${pkg.version}"
+              }
+              \`\`\``;
+            
+            let body = `## 📦 Preview Packages Published\n\n`;
+            
+            if (updatedPackages.length > 0) {
+              body += `### ✨ Updated in this branch\n\n${updatedPackages.map(formatPackage).join('\n\n')}\n\n`;
+            }
+            
+            if (unchangedPackages.length > 0) {
+              body += `### 📌 Unchanged (available from previous commits)\n\n`;
+              body += unchangedPackages.map(pkg => `- **${pkg.name}**@\`${pkg.version}\` - install with \`yarn add ${pkg.name}@${pkg.tag}\``).join('\n');
+              body += '\n\n';
+            }
+            
+            body += `\`\`\`bash
+            # Configure npm to use GitHub Packages (add to .npmrc)
+            echo "@${{ github.repository_owner }}:registry=https://npm.pkg.github.com" >> .npmrc
+            \`\`\`
+            
+            *Preview packages are automatically published for every branch. They will be cleaned up when branches are deleted.*`;
+
+            // Find existing bot comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+
+            const botComment = comments.find(comment => 
+              comment.user?.type === 'Bot' && 
+              comment.body?.includes('📦 Preview Packages Published')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+              console.log('Updated existing PR comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: body
+              });
+              console.log('Created new PR comment');
+            }

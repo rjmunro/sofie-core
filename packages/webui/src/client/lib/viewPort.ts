@@ -44,7 +44,7 @@ export function maintainFocusOnPartInstance(
 
 			try {
 				await scrollToPartInstance(partInstanceId, forceScroll, noAnimation)
-			} catch (error) {
+			} catch (_error) {
 				// Handle error if needed
 			} finally {
 				focusState.isScrolling = false

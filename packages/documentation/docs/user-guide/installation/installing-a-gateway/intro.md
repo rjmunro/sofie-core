@@ -30,7 +30,7 @@ You can expect the initial connection in Step 1 to fail. This is expected. Perip
 * [Playout Gateway](playout-gateway.md) - sends commands and modifies the state of devices in your Control Room and Studio: video servers, mixers, LED screens, lighting controllers & graphics systems
 * [Package Manager](../installing-package-manager.md) - checks if media required for a successful production is where it should be, produces proxy versions for preview inside of Rundown View, does quality control of the media and provides feedback to the Blueprints and the User
 * [Input Gateway](input-gateway.md) - receives signals from and provides support for *Human Interface Devices* devices such as Stream Decks, Skaarhoj panels and MIDI devices
-* Live Status Gateway - provides support for external services that would like to know about the state of a Studio in Sofie, incl. currently playing Parts and Pieces, available AdLibs, etc.
+* [Live Status Gateway](live-status-gateway.md) - provides support for external services that would like to know about the state of a Studio in Sofie, incl. currently playing Parts and Pieces, available AdLibs, etc.
 
 ### Rundown & Newsroom Gateways
 

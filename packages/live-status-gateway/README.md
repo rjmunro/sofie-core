@@ -2,13 +2,48 @@
 
 The Sofie Live Status Gateway is intended to be used to provide a **Stable API** that can **stream live updates** to external applications.
 
-## For Developers
+## Installation & Configuration
 
-### Starting the gateway
+### Prerequisites
+
+- Sofie Core installed and running
+- Node.js version 22.20.0 or later
+
+### Starting the Gateway
 
 `yarn start -id [SOME_ID_VALUE]` e.g. `yarn start -id live_status_gateway0`, \
 or \
 `yarn dev` which will set the id to `localDevLsg`.
+
+### Assigning to a Studio
+
+After starting the LSG for the first time (the connection will fail - this is expected):
+
+1. Open Sofie with admin access: `http://localhost:3000/settings?admin=1`
+2. Navigate to **Settings** → **Studios**
+3. Select your Studio
+4. Scroll to the **Peripheral Devices** section
+5. Under **Parent Devices**, click the **+** button
+6. Select your Live Status Gateway from the dropdown
+7. Save and restart the LSG
+
+The first connection is expected to fail. Peripheral devices must be assigned to a Studio before they can connect successfully.
+
+### Configuration
+
+After assignment, configure the LSG in **Settings** → **Devices** → **[Your Live Status Gateway]**:
+- **Debug Logging** - Enable for verbose logging
+
+The LSG runs its WebSocket server on **port 8080** by default.
+
+### Configuration
+
+After assignment, configure the LSG in **Settings** → **Devices** → **[Your Live Status Gateway]**:
+- **Debug Logging** - Enable for verbose logging
+
+The LSG runs its WebSocket server on **port 8080** by default.
+
+## For Developers
 
 ### How to write an external application that interfaces with this gateway
 
